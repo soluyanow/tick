@@ -26,9 +26,9 @@ class View
         $fieldLength        = 50; //размер стороны квадратного поля
 
         $gridString         = "<div class='gamefield'>";
-        for ($h = 1; $h <= $height; ++$h) {
+        for ($h = 0; $h < $height; ++$h) {
             $gridString .= "<div class='".$cellLineIdentity."'>";
-            for ($w = 1; $w <= $width; ++$w) {
+            for ($w = 0; $w < $width; ++$w) {
                 $curPoint = array("x" => $w, "y" => $h);
                 $gridString .= "<div data='".json_encode($curPoint)."' class=".$gameCellIdentity." id='".$gameCellIdentity."-".$h."-".$w."'></div>";
             }
