@@ -19,9 +19,6 @@ window.onload = function() {
     moveSide = userSide;
     gameField = GameActions.buldGameField(3,3);
     GameActions.movePlayers();
-
-    console.log(moveSide);
-
 };
 
 class GameActions
@@ -65,87 +62,78 @@ class GameActions
 
     static checkGameOver(playerSide)
     {
+        // Размер грани n - для вертикали и горизонтали
+        // Размер грани (n-1) - для диагонали справа налево
+        // Размер грани (n+1) - для диагонали слева направо
+
         var gameOver = false;
-
-        //Горизонтали
-        var i = 0;
-        var countMoves = 0;
-        while (typeof(gameField[i]) !== "undefined") {
-            countMoves = 0;
-            if (gameOver === true) {
-                break;
-            }
-
-            for (var j = 0; j < gameField[i].length; ++j) {
-                if (gameField[i][j] === playerSide) {
-                    ++countMoves;
-                }
-
-                if (countMoves === gameField[i].length) {
-                    gameOver = true;
-                    break;
-                }
-            }
-
-            ++i;
-        }
-
+        var facet = gameField.length; // размер грани поля
 
         var lineArray = new Array();
         for (var i = 0; i < gameField.length; ++i) {
             lineArray = lineArray.concat(gameField[i]);
         }
 
-        //Диагоняль лево-низ
-        var countMoves = 0;
-        for (var j = 0; j <= lineArray.length; ++j) {
-            if (((j % (gameField.length + 1)) === 0) && (lineArray[j] === playerSide)) {
-                ++countMoves;
-                if (countMoves === gameField.length) {
+        for (i = 0; i < facet; ++i) {
+            if (gameOver) {
+                break;
+            }
+
+            var selCellH = 0;
+            for (var j = 0; j < lineArray.length; ++j) {
+                if (gameField[i][j] === playerSide) {
+                    ++selCellH;
+                }
+
+                if (selCellH === (facet)) {
                     gameOver = true;
                     break;
                 }
             }
-        }
 
-        //Диагональ право-низ
-        var countMoves = 0;
-        var count = 0;
-        var j = 0;
-        for (var j = (gameField.length - 1); j < lineArray.length; ++j) {
-            if ((j === (gameField.length - 1)) && (lineArray[j] === playerSide)) {
-                ++countMoves;
-            }
-
-            if ((count === gameField.length - 1) && (lineArray[j] === playerSide)) {
-                ++countMoves;
-                count = 0;
-            }
-
-            ++count;
-
-            if (countMoves === gameField.length) {
-                gameOver = true;
-                break;
-            }
-        }
-
-        //Вертикали
-        var countMoves = 0;
-        var count = 0;
-        for (var j = 0; j < (lineArray.length); ++j) {
-            if (gameOver === true) {
-                break;
-            }
-            count = 0;
-            for (var i = j; (i < lineArray.length); ++i) {
-                if ((count === (gameField.length) || count === 0) && (lineArray[i] === playerSide)) {
-                    ++countMoves;
-                    count = 0;
+            var selCellV = 0;
+            var selColsV = 0;
+            for (var j = i; j < lineArray.length; ++j) {
+                if (((selColsV === 0) || (selColsV === facet)) && (lineArray[j] === playerSide)) {
+                    selColsV = 0;
+                    ++selCellV;
                 }
-                ++count;
 
-                if (countMoves === gameField.length + 1) {
+                ++selColsV;
+
+                if (selCellV === facet) {
+                    gameOver = true;
+                    break;
+                }
+            }
+
+            var selCellDL = 0;
+            var selColsDL = 0;
+            for (var j = 0; j < lineArray.length; ++j) {
+                if (((selColsDL === 0) || (selColsDL === (facet + 1))) && (lineArray[j] === playerSide)) {
+                    selColsDL = 0;
+                    ++selCellDL;
+                }
+
+                ++selColsDL;
+
+                if (selCellDL === facet) {
+                    gameOver = true;
+                    break;
+                }
+            }
+
+            var selCellDR = 0;
+            var selColsDR = 0;
+            for (var j = 0; j < lineArray.length; ++j) {
+                if (((selColsDR === 0) || (selColsDR === (facet - 1))) && (lineArray[j] === playerSide)) {
+                    selColsDR = 0;
+                    ++selCellDR;
+                }
+
+                ++selColsDR;
+
+                if (selCellDR === facet) {
                     gameOver = true;
                     break;
                 }
@@ -153,6 +141,43 @@ class GameActions
         }
 
         return gameOver;
+    }
+
+    static makeMove() {
+        // Просматриваем массив слева-направо сверху-вниз
+        // Находим пустой элемент массива
+        // Просматриваем соседние элементы
+        // Если есть заполненый элементы рядом, то заполняем ячейку значением игрока
+
+        var facet = gameField.length; // размер грани поля
+
+        var lineArray = new Array();
+        for (var i = 0; i < gameField.length; ++i) {
+            lineArray = lineArray.concat(gameField[i]);
+        }
+
+        var point = new Array();
+
+        for (i = 0; i < facet; ++i) {
+            if (point.length > 0) {
+                break;
+            }
+
+            for (j = 0; j < lineArray.length; ++j) {
+                if (gameField[i][j] === null) {
+                    point[0] = i;
+                    point[1] = j;
+                    break;
+                }
+
+                if (gameField[i][j] !== null) {
+
+                }
+
+            }
+
+        }
+
     }
 
 
@@ -164,7 +189,7 @@ class GameActions
 
             if ((gameField[curMove.y][curMove.x] === null)) {
                 //Ход игрока
-                gameField[curMove.y][curMove.x] = moveSide ? userSide : compSide;
+                gameField[curMove.y][curMove.x] = 1;
 
   /*              moveSide = !moveSide;
 
