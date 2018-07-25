@@ -21,9 +21,7 @@ class View
 
     private function buldGrid($height = 3, $width = 3) {
         $gameCellIdentity   = "gamecell"; //идентификатор ячейки игрового поля для замены
-        $clearCellIdentity  = "cell"; // идентификатор ячейки неигрового поля для замены
         $cellLineIdentity   = "line"; //строка с ячейками игрового поля
-        $fieldLength        = 50; //размер стороны квадратного поля
 
         $gridString         = "<div class='gamefield'>";
         for ($h = 0; $h < $height; ++$h) {

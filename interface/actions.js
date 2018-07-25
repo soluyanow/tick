@@ -19,7 +19,27 @@ window.onload = function() {
     moveSide = userSide;
     gameField = GameActions.buldGameField(3,3);
     GameActions.movePlayers();
+    Drawing.drawCell();
 };
+
+class Drawing
+{
+    static drawCell()
+    {
+        $(".gamecell").on("click", function() {
+            var coord = $.parseJSON($(this).attr("data"));
+            if (gameField[coord["y"]][coord["x"]] === 1) {
+                $("#gamecell-" + coord["y"] + "-" + coord["x"]).css("background", "x.png");
+            } else {
+                $("#gamecell-" + coord["y"] + "-" + coord["x"]).css("background", "o.png");
+            }
+
+        });
+    }
+
+
+
+}
 
 class GameActions
 {
