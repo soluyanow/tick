@@ -42,24 +42,6 @@ class GameActions
         return arr;
     }
 
-    static doMove(columns, rows) {
-        var point = new Array();
-
-        for (var h = 0; h < rows; ++h) {
-            for (var w = 0; w < columns; ++w) {
-                if (gameField[h][w] === null) {
-                    point[0] = h;
-                    point[1] = w
-                }
-            }
-        }
-
-        if (point.length > 0) {
-            return point;
-        }
-        return false;
-    }
-
     static checkGameOver(playerSide)
     {
         // Размер грани n - для вертикали и горизонтали
@@ -143,45 +125,271 @@ class GameActions
         return gameOver;
     }
 
-    static makeMove() {
+    static makeMove(playerSide) {
         // Просматриваем массив слева-направо сверху-вниз
         // Находим пустой элемент массива
         // Просматриваем соседние элементы
-        // Если есть заполненый элементы рядом, то заполняем ячейку значением игрока
+        // Обходим по кругу элементы, расположенные рядом с найденным, учитывая границы
 
-        var facet = gameField.length; // размер грани поля
+        var PointArr = new Array(); //Координаты точки, куда сделать ход 0 - x, 1 - y
+        var facet = gameField.length;
 
-        var lineArray = new Array();
-        for (var i = 0; i < gameField.length; ++i) {
-            lineArray = lineArray.concat(gameField[i]);
-        }
+        var fieldClear = true;
 
-        var point = new Array();
-
-        for (i = 0; i < facet; ++i) {
-            if (point.length > 0) {
+        for (var i = 0; i < facet; ++i) {
+            if (!fieldClear) {
                 break;
             }
+            for (var j = 0; j < facet; ++j) {
+                if (gameField[i][j] === playerSide) {
+                    fieldClear = false;
+                }
+            }
+        }
 
-            for (j = 0; j < lineArray.length; ++j) {
-                if (gameField[i][j] === null) {
-                    point[0] = i;
-                    point[1] = j;
+        if (fieldClear) {
+            for (var i = 0; i < facet; ++i) {
+                if (PointArr.length > 0) {
+                    break;
+                }
+                for (var j = 0; j < facet; ++j) {
+                    if (gameField[i][j] === null) {
+                        PointArr[0] = i;
+                        PointArr[1] = j;
+                        break;
+                    }
+                }
+            }
+
+            return PointArr;
+        }
+
+        if (!fieldClear) {
+            for (var i = 0; i < facet; ++i) {
+                if (PointArr.length > 0) {
                     break;
                 }
 
-                if (gameField[i][j] !== null) {
-
+                for (var j = 0; j < facet; ++j) {
+                    if (gameField[i][j] === playerSide) {
+                        if (i === 0) { //верх
+                            if (j === 0) {
+                                if (gameField[i][j + 1] === null) {
+                                    PointArr[0] = i;
+                                    PointArr[1] = j + 1;
+                                    break;
+                                } else if (gameField[i + 1][j + 1] === null) {
+                                    PointArr[0] = i + 1;
+                                    PointArr[1] = j + 1;
+                                    break;
+                                } else if (gameField[i + 1][j] === null) {
+                                    PointArr[0] = i + 1;
+                                    PointArr[1] = j;
+                                    break;
+                                }
+                            } else if ((j > 0) && (j < (facet - 1))) {
+                                if (gameField[i][j - 1] === null) {
+                                    PointArr[0] = i;
+                                    PointArr[1] = j - 1;
+                                    break;
+                                } else if (gameField[i + 1][j - 1] === null) {
+                                    PointArr[0] = i + 1;
+                                    PointArr[1] = j - 1;
+                                    break;
+                                } else if (gameField[i + 1][j] === null) {
+                                    PointArr[0] = i + 1;
+                                    PointArr[1] = j;
+                                    break;
+                                } else if (gameField[i + 1][j + 1] === null) {
+                                    PointArr[0] = i + 1;
+                                    PointArr[1] = j + 1;
+                                    break;
+                                } else if (gameField[i][j + 1] === null) {
+                                    PointArr[0] = i;
+                                    PointArr[1] = j + 1;
+                                    break;
+                                }
+                            } else if (j === (facet - 1)) {
+                                if (gameField[i][j - 1] === null) {
+                                    PointArr[0] = i;
+                                    PointArr[1] = j - 1;
+                                    break;
+                                } else if (gameField[i + 1][j - 1] === null) {
+                                    PointArr[0] = i + 1;
+                                    PointArr[1] = j - 1;
+                                    break;
+                                } else if (gameField[i + 1][j] === null) {
+                                    PointArr[0] = i + 1;
+                                    PointArr[1] = j;
+                                    break;
+                                }
+                            }
+                        } else if ((i > 0) && (i < (facet - 1))) {
+                            if (j === 0) {
+                                if (gameField[i - 1][j] === null) {
+                                    PointArr[0] = i - 1;
+                                    PointArr[1] = j;
+                                    break;
+                                } else if (gameField[i - 1][j + 1] === null) {
+                                    PointArr[0] = i - 1;
+                                    PointArr[1] = j + 1;
+                                    break;
+                                } else if (gameField[i][j + 1] === null) {
+                                    PointArr[0] = i;
+                                    PointArr[1] = j + 1;
+                                    break;
+                                } else if (gameField[i + 1][j + 1] === null) {
+                                    PointArr[0] = i + 1;
+                                    PointArr[1] = j + 1;
+                                    break;
+                                } else if (gameField[i + 1][j] === null) {
+                                    PointArr[0] = i + 1;
+                                    PointArr[1] = j;
+                                    break;
+                                }
+                            } else if ((j > 0) && (j < (facet - 1))) {
+                                if (gameField[i - 1][j - 1] === null) {
+                                    PointArr[0] = i - 1;
+                                    PointArr[1] = j - 1;
+                                    break;
+                                } else if (gameField[i][j - 1] === null) {
+                                    PointArr[0] = i;
+                                    PointArr[1] = j - 1;
+                                    break;
+                                } else if (gameField[i + 1][j - 1] === null) {
+                                    PointArr[0] = i + 1;
+                                    PointArr[1] = j - 1;
+                                    break;
+                                } else if (gameField[i + 1][j] === null) {
+                                    PointArr[0] = i + 1;
+                                    PointArr[1] = j;
+                                    break;
+                                } else if (gameField[i + 1][j + 1] === null) {
+                                    PointArr[0] = i + 1;
+                                    PointArr[1] = j + 1;
+                                    break;
+                                } else if (gameField[i][j + 1] === null) {
+                                    PointArr[0] = i;
+                                    PointArr[1] = j + 1;
+                                    break;
+                                } else if (gameField[i - 1][j + 1] === null) {
+                                    PointArr[0] = i - 1;
+                                    PointArr[1] = j + 1;
+                                    break;
+                                } else if (gameField[i - 1][j] === null) {
+                                    PointArr[0] = i - 1;
+                                    PointArr[1] = j;
+                                    break;
+                                }
+                            } else if (j === (facet - 1)) {
+                                if (gameField[i - 1][j] === null) {
+                                    PointArr[0] = i - 1;
+                                    PointArr[1] = j;
+                                    break;
+                                } else if (gameField[i - 1][j - 1] === null) {
+                                    PointArr[0] = i - 1;
+                                    PointArr[1] = j - 1;
+                                    break;
+                                } else if (gameField[i][j - 1] === null) {
+                                    PointArr[0] = i;
+                                    PointArr[1] = j - 1;
+                                    break;
+                                } else if (gameField[i + 1][j - 1] === null) {
+                                    PointArr[0] = i + 1;
+                                    PointArr[1] = j - 1;
+                                    break;
+                                } else if (gameField[i + 1][j] === null) {
+                                    PointArr[0] = i + 1;
+                                    PointArr[1] = j;
+                                    break;
+                                }
+                            }
+                        } else if (i === (facet - 1)) {
+                            if (j === 0) {
+                                if (gameField[i - 1][j] === null) {
+                                    PointArr[0] = i - 1;
+                                    PointArr[1] = j;
+                                    break;
+                                } else if (gameField[i - 1][j + 1] === null) {
+                                    PointArr[0] = i - 1;
+                                    PointArr[1] = j + 1;
+                                    break;
+                                } else if (gameField[i][j + 1] === null) {
+                                    PointArr[0] = i;
+                                    PointArr[1] = j + 1;
+                                    break;
+                                }
+                            } else if ((j > 0) && (j < (facet - 1))) {
+                                if (gameField[i][j - 1] === null) {
+                                    PointArr[0] = i;
+                                    PointArr[1] = j - 1;
+                                    break;
+                                } else if (gameField[i - 1][j - 1] === null) {
+                                    PointArr[0] = i - 1;
+                                    PointArr[1] = j - 1;
+                                    break;
+                                } else if (gameField[i - 1][j] === null) {
+                                    PointArr[0] = i - 1;
+                                    PointArr[1] = j;
+                                    break;
+                                } else if (gameField[i - 1][j + 1] === null) {
+                                    PointArr[0] = i - 1;
+                                    PointArr[1] = j + 1;
+                                    break;
+                                } else if (gameField[i][j + 1] === null) {
+                                    PointArr[0] = i;
+                                    PointArr[1] = j + 1;
+                                    break;
+                                }
+                            } else if (j === (facet - 1)) {
+                                if (gameField[i][j - 1] === null) {
+                                    PointArr[0] = i;
+                                    PointArr[1] = j - 1;
+                                    break;
+                                } else if (gameField[i - 1][j - 1] === null) {
+                                    PointArr[0] = i - 1;
+                                    PointArr[1] = j - 1;
+                                    break;
+                                } else if (gameField[i - 1][j] === null) {
+                                    PointArr[0] = i;
+                                    PointArr[1] = j + 1;
+                                    break;
+                                }
+                            }
+                        }
+                    }
                 }
-
             }
 
+            if (PointArr.length === 0) {
+                for (var j = 0; j < facet; ++j) {
+                    if (typeof(gameField[i]) !== "undefined") {
+                        PointArr[0] = i;
+                        PointArr[1] = j;
+                        break;
+                    }
+                }
+
+                return PointArr;
+            }
         }
 
+        if (PointArr.length > 0 ){
+            return PointArr;
+        }
+
+        return false;
     }
 
 
     static movePlayers() {
+        var u = userSide;
+        var c = compSide;
+
+        if (gameOver === true) {
+            console.log("Игра окончена!");
+        }
+
         var cellClass = "gamecell";
 
         $("."+cellClass).on("click", function () {
@@ -189,21 +397,37 @@ class GameActions
 
             if ((gameField[curMove.y][curMove.x] === null)) {
                 //Ход игрока
-                gameField[curMove.y][curMove.x] = 1;
 
-  /*              moveSide = !moveSide;
+                gameField[curMove.y][curMove.x] = moveSide;
+
+                if (GameActions.checkGameOver(moveSide)) {
+                    console.log("Игрок подебил");
+                    gameOver = true;
+
+                    return gameOver;
+                }
+
+                // Ход переходит к компьютеру
+                (moveSide === 1) ? (moveSide = 0) : (moveSide = 1);
 
                 //Ход компьютера
-                var point = GameActions.doMove(3,3);
-                if (point !== false) {
-                    gameField[point[0]][point[1]] = moveSide ? userSide : compSide;
 
+                var Point = GameActions.makeMove(moveSide);
+
+                if (Point !== false) {
+                    gameField[Point[0]][Point[1]] = moveSide;
                 }
-                moveSide = !moveSide;*/
-            }
 
-            if (GameActions.checkGameOver(1)) {
-                console.log("Игрок подебил");
+                if (GameActions.checkGameOver(moveSide)) {
+                    console.log("Компьютер подебил");
+                    gameOver = true;
+
+                    return gameOver;
+                }
+
+                // Ход переходит к игроку
+                (moveSide === 1) ? (moveSide = 0) : (moveSide = 1);
+                var point = false;
             }
 
 
