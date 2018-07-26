@@ -9,15 +9,25 @@
         <script src="/interface/actions.js"></script>
 
         <link href="/interface/style.css" rel="stylesheet" type="text/css">
+
+        <link rel="stylesheet" href="/interface/magnific-popup/magnific-popup.css">
+
+        <script src="/interface/magnific-popup/jquery.magnific-popup.min.js"></script>
     </head>
     <body>
         <div class="background">
-            <div class="gamefieldcontainer">
-                {gamefield}
-            </div>
-            <div class="gamemenu">
-                {gamemenu}
-            </div>
+            <div id="gameResultContainer" style="display:none;"></div>
+
+            <form method="post">
+                <a id="gameMenuContainer" href="#" style="display:none;">Game start</a>
+                <div class="gamefieldcontainer">
+                    {gamefield}
+                </div>
+            </form>
+        </div>
+
+        <div class="settings" style="display:none;">
+            <span class="GameFieldDim">{gamefielddim}</span>
         </div>
     </body>
 </html>

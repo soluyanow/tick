@@ -24,24 +24,12 @@ html
 
 .gamefieldcontainer
 {
-    width: 80%;
+    width: 100%;
     display: table;
     height: 100%;
     float: left;
     overflow: hidden;
     position: relative;
-}
-
-.gamefield {
-    display: table;
-    position: relative;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 20%;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
 }
 
 .gamemenu
@@ -52,6 +40,20 @@ html
 
 }
 
+.gamefield {
+    display: table;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10%;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+
+
 .line {
     height: 50px;
     position: relative;
@@ -60,9 +62,30 @@ html
 }
 .gamecell {
     display: table;
-    width: 50px;
-    height: 50px;
+    width: 110px;
+    height: 110px;
     position: relative;
     float: left;
     border: 1px solid #dedede;
+}
+
+.gamecell img {
+    display: block;
+    height: 90px;
+    width: 90px;
+    margin-left: auto;
+    margin-right: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin-top: 10px;
+}
+
+#gameResultContainer {
+    height: 50px;
+    border: 2px solid indigo;
+    background: teal;
+    color: #fff;
+    font-family: SansSerif;
 }

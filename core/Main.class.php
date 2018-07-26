@@ -31,7 +31,7 @@ class Main
         return $returnVal;
     }
 
-    /*
+    /**
      * Отображение интерфейса системы
      */
     public function showSystem()
@@ -41,7 +41,7 @@ class Main
     }
 }
 
-/*
+/**
  * Класс для подключения классов в соответствии с PSR-4
  */
 class Autoloader
@@ -51,7 +51,7 @@ class Autoloader
      */
     protected $classes = array();
 
-    /*
+    /**
      * Регистрирует класс в системе
      *
      * @param string $className имя класса

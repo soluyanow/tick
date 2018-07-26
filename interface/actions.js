@@ -1,46 +1,65 @@
 var userSide = 1; //За кого играет пользователь
 var compSide = 0; //За кого играет компьютер
 var gameField = new Array(); //поле клеток
-
 var gameOver = false; //Флаг окончания игры
-
 var moveSide = userSide; //Кто сейчас ходит, первый всегда пользователь
 
 window.onload = function() {
-    userSide = setPlayerSides();
-    compSide = 1 - userSide;
-    moveSide = userSide;
-    gameField = buldGameField(3,3);
-
+    startGame();
+    setPlayerSides();
+    buldGameField();
     movePlayers();
-
 };
+
+function startGame() {
+    $('#gameMenuContainer').magnificPopup({
+        items:
+            {
+                src: "<div class='gameMenu'><input type='submit' name='start' value='yes'></div>"
+            },
+            type: "inline"
+    });
+}
+
+function sayToUser(message) {
+    $("#gameResultContainer").html(message);
+    $("#gameResultContainer").css()
+}
 
 function drawCell()
 {
-    $(".gamecell").on("click", function() {
-        var coord = $.parseJSON($(this).attr("data"));
-
+    $.each(gameField, function(i, j) {
+        $.each(j, function(k, v) {
+            if (gameField[i][k] === 1) {
+                $("#gamecell-" + i + "-" + k).html("<img src='/interface/x.png' />");
+            } else if (gameField[i][k] === 0) {
+                $("#gamecell-" + i + "-" + k).html("<img src='/interface/o.png' />");
+            }
+        });
     });
+
 }
 
 function setPlayerSides()
 {
-    var max = 1;
-    var min = 0;
-
-    return Math.floor(Math.random() * (max - min + 1) + min);
+    userSide = Math.floor(Math.random() * 2);
+    compSide = 1 - userSide;
+    moveSide = userSide;
 }
 
-function buldGameField(rows, columns) {
+function buldGameField() {
+    var rows = $.parseJSON($(".GameFieldDim").html()).height;
+    var columns = $.parseJSON($(".GameFieldDim").html()).width;
+
     var arr = new Array();
-    for(var i = 0; i < rows; ++i){
+    for(var i = 0; i < rows; ++i) {
         arr[i] = new Array();
-        for(var j = 0; j < columns; ++j){
+        for(var j = 0; j < columns; ++j) {
             arr[i][j] = null;
         }
     }
-    return arr;
+
+    gameField = arr;
 }
 
 function checkGameOver(playerSide)
@@ -68,7 +87,7 @@ function checkGameOver(playerSide)
                 ++selCellH;
             }
 
-            if (selCellH === (facet)) {
+            if (selCellH >= (facet)) {
                 gameOver = true;
                 break;
             }
@@ -84,7 +103,7 @@ function checkGameOver(playerSide)
 
             ++selColsV;
 
-            if (selCellV === facet) {
+            if (selCellV >= facet) {
                 gameOver = true;
                 break;
             }
@@ -100,7 +119,7 @@ function checkGameOver(playerSide)
 
             ++selColsDL;
 
-            if (selCellDL === facet) {
+            if (selCellDL >= facet) {
                 gameOver = true;
                 break;
             }
@@ -116,7 +135,7 @@ function checkGameOver(playerSide)
 
             ++selColsDR;
 
-            if (selCellDR === facet) {
+            if (selCellDR >= facet) {
                 gameOver = true;
                 break;
             }
@@ -382,34 +401,26 @@ function makeMove(playerSide) {
 }
 
 function movePlayers() {
-    var u = userSide;
-    var c = compSide;
-
-    if (gameOver === true) {
-        console.log("Игра окончена!");
-    }
-
     var cellClass = "gamecell";
-
     $("."+cellClass).on("click", function () {
         var curMove = $.parseJSON($(this).attr("data"));
 
         if ((gameField[curMove.y][curMove.x] === null)) {
+
             //Ход игрока
 
             gameField[curMove.y][curMove.x] = moveSide;
+
             drawCell();
 
             if (checkGameOver(moveSide)) {
-                console.log("Игрок подебил");
+                sayToUser("Игрок победил");
+                console.log("Игрок победил");
                 gameOver = true;
 
                 return gameOver;
             }
 
-
-
-            // Ход переходит к компьютеру
             (moveSide === 1) ? (moveSide = 0) : (moveSide = 1);
 
             //Ход компьютера
@@ -419,19 +430,19 @@ function movePlayers() {
             if (Point !== false) {
                 gameField[Point[0]][Point[1]] = moveSide;
             }
+
             drawCell();
+
             if (checkGameOver(moveSide)) {
-                console.log("Компьютер подебил");
+                sayToUser("Компьютер победил");
+                console.log("Компьютер победил");
                 gameOver = true;
 
                 return gameOver;
             }
 
-            // Ход переходит к игроку
             (moveSide === 1) ? (moveSide = 0) : (moveSide = 1);
-
         }
-
 
         console.log(gameField);
     });
