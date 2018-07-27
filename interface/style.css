@@ -87,5 +87,8 @@ html
     border: 2px solid indigo;
     background: teal;
     color: #fff;
-    font-family: SansSerif;
+    font-family: arial;
+    line-height: 2.75em;
+    box-sizing: border-box;
+    padding-left: 50px;
 }

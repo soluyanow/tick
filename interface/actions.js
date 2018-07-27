@@ -12,18 +12,28 @@ window.onload = function() {
 };
 
 function startGame() {
+    /*$.ajax({
+        type: "POST",
+        url: url,
+        data: data,
+        success: success,
+        dataType: dataType
+    });*/
+}
+
+function showMenu() {
     $('#gameMenuContainer').magnificPopup({
         items:
             {
                 src: "<div class='gameMenu'><input type='submit' name='start' value='yes'></div>"
             },
-            type: "inline"
+        type: "inline"
     });
 }
 
 function sayToUser(message) {
     $("#gameResultContainer").html(message);
-    $("#gameResultContainer").css()
+    $("#gameResultContainer").css("display", "block");
 }
 
 function drawCell()
